@@ -6,7 +6,7 @@ const HomePage = (props) => {
     const {user} = props;
 
     return (
-        <div>
+        <div className="home-wrap">
             <h2>Home Page</h2>
             {
                 user && 

@@ -7,21 +7,10 @@ import LoginPage from './pages/LoginPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import AddPollPage from './pages/AddPollPage';
 import ProfilePage from './pages/ProfilePage';
-
 import { connect } from 'react-redux';
 import RequireAuth from './components/RequireAuth';
 
 function App(props) {
-
-    const {user} = props;
-    let navigate = useNavigate();
-
-    useEffect(() => {
-        //  Check if the user has a logged in cookie
-        if (!user || user === null){
-            navigate('/login');
-        }
-    }, []);
 
     return (
             <Routes>

@@ -1,44 +1,52 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+    filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+    filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+    a:nth-of-type(2) .logo {
+        animation: logo-spin infinite 20s linear;
+    }
 }
 
 .card {
-  padding: 2em;
+    padding: 2em;
 }
 
 .read-the-docs {
-  color: #888;
+    color: #888;
+}
+
+.login-form-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .login-form {
@@ -48,14 +56,15 @@
     justify-content: center;
     align-items: center;
     border: 1px solid rgb(15 0 255 / 16%);
-    padding: 4em;
+    padding: 2em;
     padding-top: 1em;
     border-radius: 20px;
     background: rgb(128 177 240 / 18%);
     box-shadow: 0px 0px 6px 2px rgb(31 94 215 / 18%);
+    /* width: max-content; */
 }
 
-.login-form > div {
+.login-form>div {
     display: flex;
     flex-flow: column;
     gap: 0.8em;
@@ -66,7 +75,7 @@
     background: rgb(73, 73, 73);
     border-radius: 4px;
     height: 1.9em;
-    width: 39ch;
+    /* width: 39ch; */
     color: white;
 }
 
@@ -75,4 +84,125 @@
     color: white;
     padding: 0.5em 1em;
     border-radius: 4px;
+}
+
+ul.header-list-left,
+ul.header-list-right,
+ul.profile-list {
+    display: flex;
+    flex-flow: row;
+    gap: 3em;
+    list-style-type: none;
+}
+
+.header {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    margin: 2em;
+}
+
+.header a {
+    color: #90ff9b !important;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+}
+
+.header a:hover {
+    border-bottom: 2px solid #90ff9b !important;
+}
+
+.active_page {
+    border-bottom: 2px solid #90ff9b !important;
+}
+
+.profile-list-wrap {
+    position: relative;
+}
+
+.profile-list {
+    gap: 0.4em !important;
+    /* display: flex;
+    flex-flow: row; */
+}
+
+.profile-dropdown-wrap {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+.profile-dropdown {
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.profile-dropdown-open {
+    transform: rotate(180deg);
+}
+
+.logout {
+    background: #4d4d4d;
+    position: absolute;
+    right: 0;
+    border-radius: 6px;
+    padding: 0.3em 0.9em;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.logout:hover {
+    background: #6d6d6d !important;
+}
+
+.add-poll-form {
+    display: flex;
+    flex-flow: column;
+    gap: 2em;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-poll-form textarea {
+    height: 5em;
+    width: 40ch;
+}
+
+.form-top {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-bottom {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1em;
+}
+
+.form-bottom > div {
+    display: flex;
+    flex-flow: column;
+}
+
+.poll-widget-wrap {
+    border: 1px solid red;
+    padding: 1em;
+}
+
+.polls {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 3em;
+    max-width: 80vw;
+}
+
+.home-wrap {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }

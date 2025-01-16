@@ -1,5 +1,9 @@
 const Leaderboard = () => {
-    return <></>
+    return (
+        <>
+            Leaderboard
+        </>
+    )
 };
 
 export default Leaderboard;

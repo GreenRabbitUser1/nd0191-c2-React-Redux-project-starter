@@ -4,6 +4,7 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const SESSION_RESTORE = 'SESSION_RESTORE';
 
 export function attemptLogin({username, password}){
     return async (dispatch) => {
@@ -11,44 +12,29 @@ export function attemptLogin({username, password}){
             type: LOGIN_REQUEST
         });
         try {
-            const response = await API._getUsers();
-            if (!response || response === null){
-                dispatch({
-                    type: LOGIN_FAILURE,
-                    error: 'Did not find any users'
-                });
-                return false;
 
-            }
-            const user = response[username];
-            if (!user || user === null){
-                dispatch({
-                    type: LOGIN_FAILURE,
-                    error: 'Did not find user matching this username'
-                });
+            const {user, getUserError} = await getUser(username, password);
+            if (getUserError && getUserError !== null){
+                dispatch(getUserError);
                 return false;
             }
-            //  Check if the password matches
-            if (user.password !== password){
-                dispatch({
-                    type: LOGIN_FAILURE,
-                    error: 'Password did not match'
-                });
-                return false;
-            }
+
             //  SUCCESS! Username and password matches, user has been authenticated
-            const sessionToken = await fetch('/api/generateJWT', {
+            let sessionToken = await fetch('/api/auth/generate-jwt', {
                 body: JSON.stringify({username, password}),
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log('sessionToken:', sessionToken);
-            localStorage.setItem('udacity-fianl-project-token', sessionToken);
-            const lst = localStorage.getItem('udacity-fianl-project-token');
-            console.info(lst);
-            // console.info('lst: ', lst);
+            if (sessionToken.ok){
+                sessionToken = await sessionToken.json();
+                console.log('sessionToken:', sessionToken);
+                localStorage.setItem('udacity-final-project-token', sessionToken);
+                const lst = localStorage.getItem('udacity-final-project-token');
+                console.info(lst);
+                // console.info('lst: ', lst);
+            }
             dispatch({
                 type: LOGIN_SUCCESS,
                 user
@@ -65,4 +51,83 @@ export function attemptLogin({username, password}){
         }
        
     }
+}
+
+async function getUser(username, password){
+    let user;
+    let error;
+    const response = await API._getUsers();
+    if (!response || response === null){
+        error = {
+            type: LOGIN_FAILURE,
+            error: 'Did not find any users'
+        };
+    }
+    try {
+        user = response[username];
+    } catch(e){}
+    if (!user || user === null){
+        error = {
+            type: LOGIN_FAILURE,
+            error: 'Did not find user matching this username'
+        };
+    }
+    else {
+        //  Check if the password matches
+        if (user.password !== password){
+            error = {
+                type: LOGIN_FAILURE,
+                error: 'Password did not match'
+            };
+        }
+    }
+    return {
+        user,
+        getUserError: error
+    };
+}
+
+export function attemptSessionRestore(){
+
+    return async (dispatch) => {
+        //  Check if the user has a logged in cookie
+        let validSession = false;
+        const sessionToken = localStorage.getItem('udacity-final-project-token');
+        if (sessionToken && sessionToken !== null){
+            console.log('There is a valid session token', sessionToken);
+            let decodedToken = await fetch('/api/auth/decode-jwt', {
+                body: JSON.stringify({
+                    token: sessionToken
+                }),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (decodedToken.ok){
+                decodedToken = await decodedToken.json();
+                //  With the decodedToken the following are now available: username, password, iat, exp
+                //  Get the user, set the state in the store, redirect to / if on /login
+                console.log('decodedToken', decodedToken);
+                const {user, getUserError} = await getUser(decodedToken.username, decodedToken.password);
+                if (getUserError && getUserError !== null){
+                    dispatch(getUserError);
+                    return false;
+                }
+                dispatch({
+                    type: LOGIN_SUCCESS,
+                    user
+                });
+                validSession = true;
+                return true;
+            }
+        }
+
+        return validSession;
+
+        // dispatch({
+        //     type: SESSION_RESTORE
+        // })
+    }
+
 }

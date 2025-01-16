@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { attemptLogin } from '../actions/login';
+import { attemptLogout } from '../actions/logout';
 import { useNavigate } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 
@@ -43,14 +44,14 @@ const Login = (props) => {
     }, [user])
 
     useEffect(() => {
+        dispatch(attemptLogout());
         setTimeout(() => {
             document.getElementById('login-username').focus();
         }, 1000);
-
     }, []);
 
     return (
-        <div>
+        <div className="login-form-wrap">
             <form className="login-form" onSubmit={handleLogin}>
                 <h2>Workplace Polls App</h2>
                 {

@@ -1,19 +1,38 @@
 import { useNavigate, Outlet } from "react-router-dom";
 import { connect } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { attemptSessionRestore } from "../actions/login";
 
 const RequireAuth = (props) => {
 
-    const {user} = props;
+    const {user, dispatch} = props;
     let navigate = useNavigate();
+    const [tryValidate, setTryValidate] = useState(false)
 
     useEffect(() => {
-        if (!user){
-            navigate('/login');
+        async function tryValidatingSession(){
+            if (!user || user == null){
+                await dispatch(attemptSessionRestore());
+            }
+            
+            setTryValidate(true);
         }
+
+        tryValidatingSession();
+        
     }, []);
 
-    
+    useEffect(() => {
+        if (tryValidate){
+            if (!user || user === null){
+                navigate('/login');
+            }
+        }
+        if (user && user !== null){
+            document.querySelector('body').style.justifyContent = 'flex-start';
+        }
+    }, [tryValidate])
+
     if (user) {
         return <Outlet />
     }

@@ -1,7 +1,11 @@
-const PollWidget = () => {
+const PollWidget = ({poll}) => {
+
     return (
-        <div>
-            Poll Widget
+        <div className="poll-widget-wrap">
+            {
+                poll &&
+                poll.id
+            }
         </div>
     )
 };
