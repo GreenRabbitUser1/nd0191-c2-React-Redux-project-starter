@@ -1,25 +1,33 @@
 import { connect } from "react-redux";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addPoll } from "../actions/polls";
 
-const NewPoll = () => {
+const NewPoll = (props) => {
 
-    const [pollQuestion, setPollQuestion] = useState('');
+    const {user, dispatch} = props;
+
     const [pollOption1, setPollOption1] = useState('');
     const [pollOption2, setPollOption2] = useState('');
+
+    let navigate = useNavigate();
 
     const submitNewPoll = (e) => {
         e.preventDefault();
         console.log('User is submitting a new poll');
-        console.log('Poll Details', {
-            pollQuestion,
-            pollOption1,
-            pollOption2
-        });
-    };
+        let poll_details =  {
+            optionOneText: pollOption1,
+            optionTwoText: pollOption2,
+            author: user.id
+        }
+        console.log('Poll Details', poll_details);
 
-    const handleUpdatePollQuestion = (e) => {
-        setPollQuestion(e.target.value);
-    }
+        dispatch(addPoll(poll_details));
+
+        navigate('/');
+
+        
+    };
 
     const handleUpdatePollOption1 = (e) => {
         setPollOption1(e.target.value);
@@ -34,9 +42,8 @@ const NewPoll = () => {
 
                 <div className="form-top">
                     <label>
-                        What question would you like to ask?
+                        Would you rather ... ?
                     </label>
-                    <textarea onChange={handleUpdatePollQuestion} value={pollQuestion} />
                 </div>
 
                 <div className="form-bottom">

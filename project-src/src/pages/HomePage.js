@@ -7,12 +7,11 @@ const HomePage = (props) => {
 
     return (
         <div className="home-wrap">
-            <h2>Home Page</h2>
             {
                 user && 
-                <h3>
+                <h3 className="welcome-message">
                     {
-                        `Welcome, ${user.name}!`
+                        `Welcome back, ${user.name}!`
                     }
                 </h3>
             }

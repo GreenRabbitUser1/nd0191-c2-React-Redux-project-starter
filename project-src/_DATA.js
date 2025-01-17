@@ -1,4 +1,3 @@
-
 let users = {
     sarahedo: {
         id: 'sarahedo',
@@ -178,12 +177,21 @@ export function _saveQuestion(question) {
         if (!question.optionOneText || !question.optionTwoText || !question.author) {
             reject("Please provide optionOneText, optionTwoText, and author");
         }
+        const author = question.author;
 
         const formattedQuestion = formatQuestion(question)
         setTimeout(() => {
             questions = {
                 ...questions,
                 [formattedQuestion.id]: formattedQuestion
+            }
+
+            users = {
+                ...users,
+                [author]: {
+                    ...users[author],
+                    questions: users[author].questions.concat([formattedQuestion.id])
+                }
             }
 
             resolve(formattedQuestion)

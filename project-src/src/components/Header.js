@@ -1,17 +1,34 @@
-import {connect} from "react-redux";
-import {Link, useNavigate, useLocation} from "react-router-dom";
-import {attemptLogout} from "../actions/logout";
-import {useEffect, useState} from "react";
-import {FaChevronDown} from "react-icons/fa";
+import { connect } from "react-redux";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { attemptLogout } from "../actions/logout";
+import { useEffect, useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
+import { getUsers } from "../actions/users";
 
 const Header = (props) => {
 
-    const {dispatch, user} = props;
+    const {dispatch, user, users} = props;
 
     let navigate = useNavigate();
     const location = useLocation();
 
     const [profileListOpen, setProfileListOpen] = useState(false);
+
+    useEffect(() => {
+        console.log('users changed!', users);
+    }, [users])
+
+    useEffect(() => {
+        //  When the header loads, fetch the users and set the state
+        //  Do this in <Header> because various pages+components may need users and header will render-
+        //  -on every route that requires auth
+        async function fetchUsers(){
+            if (!users || users === null){
+                await dispatch(getUsers())
+            }
+        }
+        fetchUsers();
+    }, [])
 
     const logout = async() => {
         await dispatch(attemptLogout());
@@ -25,8 +42,14 @@ const Header = (props) => {
 
     useEffect(() => {
         //  When location changes, check if any Header links match the location  If so,
-        // add the class active_page to the Link element
+        //  add the class active_page to the Link element
         console.log('Location changed!', location);
+        async function fetchUsers(){
+            if (!users || users === null){
+                await dispatch(getUsers())
+            }
+        }
+        fetchUsers();
     }, [location]);
 
     return (

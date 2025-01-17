@@ -87,6 +87,23 @@ async function getUser(username, password){
     };
 }
 
+export function refreshUser(uId){
+    return async (dispatch) => {
+        console.log('Refreshing User ...');
+        const response = await API._getUsers();
+        let user;
+        if (response && response !== null){
+            user = response[uId];
+            dispatch({
+                type: LOGIN_SUCCESS,
+                user
+            });
+            console.log('Refreshed.');
+            return true;
+        }
+    }
+}
+
 export function attemptSessionRestore(){
 
     return async (dispatch) => {

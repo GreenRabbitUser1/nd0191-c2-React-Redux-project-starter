@@ -2,10 +2,18 @@ import { useEffect } from "react";
 import { getPolls } from "../actions/polls";
 import { connect } from "react-redux";
 import PollWidget from "./PollWidget";
+import { IoMdEye } from "react-icons/io";
+import { FaChevronDown } from "react-icons/fa";
+import { useState } from "react";
 
 const Dashboard = (props) => {
 
-    const {polls, dispatch} = props;
+    const {polls, dispatch, user} = props;
+
+    const [showViewOptions, setShowViewOptions] = useState(false);
+
+    const [showUnansweredPolls, setShowUnansweredPolls] = useState(true);
+    const [showAnsweredPolls, setShowAnsweredPolls] = useState(true);
 
     useEffect(() => {
         console.log('polls changed!', polls);
@@ -13,29 +21,106 @@ const Dashboard = (props) => {
 
     useEffect(() => {
         //  Get all the active polls/questions and create <PollWidget />'s
+
         async function fetchPolls(){
             await dispatch(getPolls());
         }
         fetchPolls();
     }, []);
 
+    const toggleShowViewOptions = () => {
+        setShowViewOptions(!showViewOptions);
+    }
+
+    const toggleShowUnansweredPolls = () => {
+        setShowUnansweredPolls(!showUnansweredPolls)
+    }
+
+    const toggleShowAnsweredPolls = () => {
+        setShowAnsweredPolls(!showAnsweredPolls)
+    }
+
     return (
-        <div className="polls">
-            {
-                polls &&
-                Object.keys(polls).map((p) => {
-                    console.log('Object.keys(polls) --> p --> ', p);
-                    return (
-                        <PollWidget poll={polls[p]} key={p} />
-                    ) 
-                })
-            }
-        </div>
+        <>
+            <div className="view-wrap">
+                <div className="view-filter-top" onClick={toggleShowViewOptions}>
+                    <IoMdEye />
+                    <span>Filter View</span>
+                    <FaChevronDown  className={`
+                        view-filter-icon 
+                        ${(showViewOptions
+                            ? ' view-filter-open'
+                            : ''
+                        )}
+                    `} />
+                </div>
+                {
+                    showViewOptions &&
+                    <div className="view-options-wrap">
+                        <div className="view-options">
+                            <div className="view-option">
+                                <input type="checkbox" checked={showUnansweredPolls} onChange={toggleShowUnansweredPolls} />
+                                <label>Unanswered Polls</label>
+                            </div>
+                            <div className="view-option">
+                                <input type="checkbox" checked={showAnsweredPolls} onChange={toggleShowAnsweredPolls} />
+                                <label>Answered Polls</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div className="polls">
+                {
+                    polls && showUnansweredPolls && 
+                    <div className="poll-category">
+                        <div className="poll-category-name">
+                            Unanswered Polls
+                        </div>
+                        <div className="poll-wrap">
+                            {
+                                // Show the unanswered polls
+                                
+                                Object.keys(polls).map((p) => {
+                                    if (!user.answers[p]){
+                                        return (
+                                            <PollWidget poll={polls[p]} key={p} />
+                                        ) 
+                                    }
+                                })
+                            }
+                        </div>
+                    </div>
+                }
+                {
+                    polls && showAnsweredPolls && 
+                    <div className="poll-category">
+                        <div className="poll-category-name">
+                            Answered Polls
+                        </div>
+                        <div className="poll-wrap">
+                            {
+                                // Show the answered polls
+                                polls &&
+                                Object.keys(polls).map((p) => {
+                                    if (user.answers[p]){
+                                        return (
+                                            <PollWidget poll={polls[p]} key={p} />
+                                        ) 
+                                    }
+                                })
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </>
     );
 };
 
 const mapStateToProps = (state) => ({
-    polls: state.polls
+    polls: state.polls,
+    user: state.user
 });
 
 export default connect(mapStateToProps)(Dashboard);

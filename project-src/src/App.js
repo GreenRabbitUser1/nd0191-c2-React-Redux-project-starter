@@ -7,8 +7,10 @@ import LoginPage from './pages/LoginPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import AddPollPage from './pages/AddPollPage';
 import ProfilePage from './pages/ProfilePage';
+import PollPage from './pages/PollPage';
 import { connect } from 'react-redux';
 import RequireAuth from './components/RequireAuth';
+import { Navigate } from 'react-router-dom';
 
 function App(props) {
 
@@ -27,12 +29,15 @@ function App(props) {
                     {/* Users can create new polls for other users to answer */}
                     <Route exact path="/add" element={<MainLayout page={<AddPollPage />}></MainLayout>} />
 
+                    {/* Users can create new polls for other users to answer */}
+                    <Route path="/question/:id" element={<MainLayout page={<PollPage />}></MainLayout>} />
+
                     {/* Users can view their profile settings and perform some updates such as password reset */}
                     <Route path="/profile" element={<MainLayout page={<ProfilePage />}></MainLayout>} />
                 </Route>
 
                 {/* Catch-all route for 404 - currently navigates back to login screen - fix to only navigate if user is not authenticated */}
-                <Route path="*" element={useNavigate('/login')} />
+                <Route path="*" element={<Navigate to='/login' />} />
 
             </Routes>
     )
