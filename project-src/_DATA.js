@@ -132,8 +132,21 @@ function generateUID() {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 }
 
-export async function _generateBasicToken(){
-
+export async function _saveUser(user, new_data){
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            users = {
+                ...users,
+                [user.id]: {
+                    ...users[user.id],
+                    name: new_data.name,
+                    avatarURL: new_data.avatarURL
+                }
+            };
+            
+            resolve(users[user.id])
+        }, 1000)
+    })
 }
 
 export function _getUsers() {

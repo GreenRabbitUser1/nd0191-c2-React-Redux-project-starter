@@ -454,3 +454,75 @@ ul.profile-list {
 .leaderboard-current-user {
     background: #ffff9236;
 }
+
+.poll-header {
+    position: relative;
+}
+
+svg.widget-nav:hover {
+    fill: #45a468;
+}
+
+.widget-nav {
+    height: 1.4em;
+    width: 1.4em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    fill: #85ffb2;
+    stroke: #85ffb2;
+    transition: 0.15s all;
+}
+
+.poll-page-widget-wrap {
+    display: flex;
+    justify-content: center;
+}
+
+.submitting-answer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-flow: column;
+}
+
+form.profile-wrap {
+    display: flex;
+    flex-flow: column;
+    gap: 1em;
+    align-items: center;
+}
+
+.main-info-wrap {
+    display: flex;
+    flex-flow: column;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+}
+
+.field-wrap {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.field-wrap input {
+    height: 1.8em;
+    width: 29ch;
+}
+
+.profile-wrap .main-info-wrap img {
+    width: 5em;
+    height: 5em;
+    border: 1px solid pink;
+    margin-bottom: 1em;
+    border-radius: 50%;
+    background: #ffaebc4f;
+}
+
+.mt-2 {
+    margin-top: 2em;
+    width: max-content;
+}

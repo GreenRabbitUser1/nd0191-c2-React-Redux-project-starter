@@ -9,7 +9,7 @@ const HomePage = (props) => {
         <div className="home-wrap">
             {
                 user && 
-                <h3 className="welcome-message">
+                <h3 className="welcome-message" data-testid="welcome-message">
                     {
                         `Welcome back, ${user.name}!`
                     }

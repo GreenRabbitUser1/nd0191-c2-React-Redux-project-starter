@@ -4,10 +4,13 @@ import { attemptLogout } from "../actions/logout";
 import { useEffect, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { getUsers } from "../actions/users";
+import { getPolls } from "../actions/polls";
+import { setLoadingStart, setLoadingEnd } from "../actions/loading";
+
 
 const Header = (props) => {
 
-    const {dispatch, user, users} = props;
+    const {dispatch, user, users, polls} = props;
 
     let navigate = useNavigate();
     const location = useLocation();
@@ -19,6 +22,7 @@ const Header = (props) => {
     }, [users])
 
     useEffect(() => {
+        dispatch(setLoadingStart());
         //  When the header loads, fetch the users and set the state
         //  Do this in <Header> because various pages+components may need users and header will render-
         //  -on every route that requires auth
@@ -28,7 +32,17 @@ const Header = (props) => {
             }
         }
         fetchUsers();
-    }, [])
+
+        //  Get all the active polls/questions and create <PollWidget />'s
+        async function fetchPolls(){
+            if (!polls || polls === null){
+                await dispatch(getPolls());
+            }
+        }
+        fetchPolls();
+        dispatch(setLoadingEnd());
+    }, []);
+
 
     const logout = async() => {
         await dispatch(attemptLogout());
@@ -54,6 +68,7 @@ const Header = (props) => {
 
     return (
         <div className="header">
+            <span data-testid="test-123">{user?.name}</span>
             <ul className="header-list-left">
                 <li>
                     <Link
@@ -87,8 +102,8 @@ const Header = (props) => {
                 <li className="profile-list-wrap">
                     <ul className="profile-list">
                         <li>
-                            <Link to="/profile">
-                                {user.name}
+                            <Link to="/profile" data-testid="header-user-name">
+                                {user?.name}
                             </Link>
                         </li>
                         <li className="profile-dropdown-wrap">

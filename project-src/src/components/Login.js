@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { attemptLogin } from '../actions/login';
 import { attemptLogout } from '../actions/logout';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 
 const Login = (props) => {
@@ -12,6 +12,8 @@ const Login = (props) => {
     const [password, setPassword] = useState('');
     const user = useSelector((state) => state.user);
     let navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
     
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -39,15 +41,17 @@ const Login = (props) => {
     useEffect(() => {
         if (user && user !== null){
             console.log('user:', user);
-            navigate('/');
+            navigate(from);
         }
     }, [user])
 
     useEffect(() => {
+        console.log('From:', from);
         dispatch(attemptLogout());
         setTimeout(() => {
             document.getElementById('login-username').focus();
         }, 1000);
+        
     }, []);
 
     return (
@@ -61,11 +65,11 @@ const Login = (props) => {
                     </h3>
                 }
                 <div>
-                    <label>Username</label>
+                    <label htmlFor="login-username">Username</label>
                     <input type="text" data-testid="login-username" id="login-username" value={username} onChange={handleUsernameChange} />
                 </div>
                 <div>
-                    <label>Password</label>
+                    <label htmlFor="login-password">Password</label>
                     <input type="password" data-testid="login-password" id="login-password" value={password} onChange={handlePasswordChange} />
                 </div>
                 <div>

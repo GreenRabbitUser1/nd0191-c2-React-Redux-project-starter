@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { getPolls } from "../actions/polls";
 import { connect } from "react-redux";
 import PollWidget from "./PollWidget";
 import { IoMdEye } from "react-icons/io";
@@ -18,15 +17,6 @@ const Dashboard = (props) => {
     useEffect(() => {
         console.log('polls changed!', polls);
     }, [polls])
-
-    useEffect(() => {
-        //  Get all the active polls/questions and create <PollWidget />'s
-
-        async function fetchPolls(){
-            await dispatch(getPolls());
-        }
-        fetchPolls();
-    }, []);
 
     const toggleShowViewOptions = () => {
         setShowViewOptions(!showViewOptions);

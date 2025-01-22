@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import MainLayout from './components/MainLayout';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -14,6 +14,8 @@ import { Navigate } from 'react-router-dom';
 
 function App(props) {
 
+    const location = useLocation();
+
     return (
             <Routes>
                 {/* Require users to authenticate */}
@@ -21,7 +23,7 @@ function App(props) {
 
                 <Route element={<RequireAuth/>}>
                     {/* Users can answer polls on the Dashboard of the HomePage  */}
-                    <Route path="/" element={<MainLayout page={<HomePage />}></MainLayout>} />
+                    <Route path="/" exact element={<MainLayout page={<HomePage />}></MainLayout>} />
 
                     {/* Users can view the Leaderboard with the number of answered polls and created polls by user */}
                     <Route exact path="/leaderboard" element={<MainLayout page={<LeaderboardPage />}></MainLayout>} />
@@ -34,10 +36,13 @@ function App(props) {
 
                     {/* Users can view their profile settings and perform some updates such as password reset */}
                     <Route path="/profile" element={<MainLayout page={<ProfilePage />}></MainLayout>} />
+
+                    {/* Catch-all route for 404 - currently navigates back to login screen - fix to only navigate if user is not authenticated */}
+                    <Route path="*" element={<Navigate to='/login' />} />
                 </Route>
 
                 {/* Catch-all route for 404 - currently navigates back to login screen - fix to only navigate if user is not authenticated */}
-                <Route path="*" element={<Navigate to='/login' />} />
+                <Route path="*" element={<Navigate to="/login" state={{ from: location }} replace />} />
 
             </Routes>
     )

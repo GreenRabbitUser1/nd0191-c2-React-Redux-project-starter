@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 
 const Leaderboard = (props) => {
 
-    const {users, user} = props;
+    const { users, user, loading } = props;
 
     //  Create a table users X poll activity
 
     const [readUsers, setReadUsers] = useState([]);
+    const [isReady, setIsReady] = useState(false);
     let tempUsers = [];
 
     function sortUsers(){
@@ -30,16 +31,20 @@ const Leaderboard = (props) => {
     }
 
     useEffect(() => {
-        sortUsers();
-    }, [users]);
-
-    useEffect(() => {
-        if (users && users !== null){
+        if (!loading){
             sortUsers();
         }
-    }, []);
+    }, [loading, users]);
+
+    // useEffect(() => {
+    //     if (users && users !== null){
+    //         sortUsers();
+    //         setIsReady(true);
+    //     }
+    // }, []);
 
     return (
+        !loading &&
         <div className="leaderboard-table-wrap">
             <table className="leaderboard-table">
                 <thead>
@@ -99,7 +104,8 @@ const Leaderboard = (props) => {
 
 const mapStateToProps = (state) => ({
     users: state.users,
-    user: state.user
+    user: state.user,
+    loading: state.loading
 })
 
 export default connect(mapStateToProps)(Leaderboard);

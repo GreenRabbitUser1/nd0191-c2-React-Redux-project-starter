@@ -5,6 +5,14 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const SESSION_RESTORE = 'SESSION_RESTORE';
+export const ATTEMPT_RESTORE = 'ATTEMPT_RESTORE';
+
+export function setUser(user){
+    return {
+        type: LOGIN_REQUEST,
+        user
+    };
+}
 
 export function attemptLogin({username, password}){
     return async (dispatch) => {
@@ -129,14 +137,16 @@ export function attemptSessionRestore(){
                 const {user, getUserError} = await getUser(decodedToken.username, decodedToken.password);
                 if (getUserError && getUserError !== null){
                     dispatch(getUserError);
-                    return false;
+                    return validSession;
                 }
                 dispatch({
                     type: LOGIN_SUCCESS,
                     user
                 });
+                dispatch({
+                    type: ATTEMPT_RESTORE
+                });
                 validSession = true;
-                return true;
             }
         }
 

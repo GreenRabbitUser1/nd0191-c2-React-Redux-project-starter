@@ -7,13 +7,16 @@ const NewPoll = (props) => {
 
     const {user, dispatch} = props;
 
+    const [submitting, setSubmitting] = useState(false);
+    const [submitText, setSubmitText] = useState('Submitting ...');
     const [pollOption1, setPollOption1] = useState('');
     const [pollOption2, setPollOption2] = useState('');
 
     let navigate = useNavigate();
 
-    const submitNewPoll = (e) => {
+    const submitNewPoll = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
         console.log('User is submitting a new poll');
         let poll_details =  {
             optionOneText: pollOption1,
@@ -22,10 +25,14 @@ const NewPoll = (props) => {
         }
         console.log('Poll Details', poll_details);
 
-        dispatch(addPoll(poll_details));
+        await dispatch(addPoll(poll_details));
 
-        navigate('/');
+        setSubmitText('Submitted!');
 
+        setTimeout(() => {
+            // setSubmitting(false);
+            navigate('/');
+        }, 500);
         
     };
 
@@ -51,19 +58,29 @@ const NewPoll = (props) => {
                         <label>
                             Option #1
                         </label>
-                        <textarea  onChange={handleUpdatePollOption1} value={pollOption1} />
+                        <textarea placeholder="Enter text ..." onChange={handleUpdatePollOption1} value={pollOption1} />
                     </div>
                     <div>
                         <label>
                             Option #2
                         </label>
-                        <textarea  onChange={handleUpdatePollOption2} value={pollOption2} />
+                        <textarea placeholder="Enter text ..." onChange={handleUpdatePollOption2} value={pollOption2} />
                     </div>
                 </div>
 
-                <button className="submit-button">
-                    Submit New Poll
-                </button>
+                {
+                    !submitting &&
+                    <button className="submit-button">
+                        Submit New Poll
+                    </button>
+                }
+                {
+                    submitting &&
+                    <div className="submit-button">
+                        {submitText}
+                    </div>
+                }
+                
 
             </form>
         </div>

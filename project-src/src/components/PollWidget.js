@@ -2,13 +2,16 @@ import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { submitPollVote } from "../actions/polls";
+import { BiSolidNavigation } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import { getUsers } from "../actions/users";
 
 const PollWidget = (props) => {
 
-    const { poll, users, user, dispatch } = props;
-
+    const { poll, users, user, dispatch, pathname } = props;
     const [pollReady, setPollReady] = useState(false);
-    const mixer = Math.random(1) >= 0.5;
+    const [pollSubmitting, setPollSubmitting] = useState(false);
+    const [mixer, setMixer] = useState(Math.random(1) >= 0.5);
 
     useEffect(() => {
         //  When poll, users, and user are not null, begin data operations 
@@ -16,14 +19,19 @@ const PollWidget = (props) => {
         setPollReady(false);
         if (poll && poll !== null && users && users !== null && user && user !== null){
             setPollReady(true);
+            setPollSubmitting(false);
         }
 
     }, [poll, users, users]);
 
     const handleAnswerPoll = (answer) => {
         console.log('User voted for an option');
+        setPollSubmitting(true);
         setPollReady(false);
-        dispatch(submitPollVote(user, poll.id, answer))
+        setTimeout(async () => {
+            await dispatch(submitPollVote(user, poll.id, answer));
+            await dispatch(getUsers());
+        }, 300);
     }
 
     const widthOptionOne = () => {
@@ -33,7 +41,7 @@ const PollWidget = (props) => {
         if (poll.optionOne.votes.length + poll.optionTwo.votes.length == 0){
             return 0;
         }
-        return Math.floor((poll.optionOne.votes.length / (poll.optionOne.votes.length + poll.optionTwo.votes.length)) * 100);
+        return Math.round((poll.optionOne.votes.length / (poll.optionOne.votes.length + poll.optionTwo.votes.length)) * 100);
     }
 
     const widthOptionTwo = () => {
@@ -43,12 +51,19 @@ const PollWidget = (props) => {
         if (poll.optionOne.votes.length + poll.optionTwo.votes.length == 0){
             return 0;
         }
-        return Math.floor((poll.optionTwo.votes.length / (poll.optionOne.votes.length + poll.optionTwo.votes.length)) * 100);
+        return Math.round((poll.optionTwo.votes.length / (poll.optionOne.votes.length + poll.optionTwo.votes.length)) * 100);
     }
 
     return (
-        pollReady &&
         <div className="poll-widget-wrap">
+            {
+                pollSubmitting && 
+                <div className="submitting-answer">
+                    <div>Submitting Answer ...</div>
+                    <br/>
+                    <div>Thanks for participating in this poll!</div>
+                </div>
+            }
             {
                 pollReady && 
                 <>
@@ -56,6 +71,12 @@ const PollWidget = (props) => {
                         <div className="poll-question">
                             Would you rather ... ?
                         </div>
+                        {
+                            !pathname && 
+                            <Link to={`/question/${poll.id}`}>
+                                <BiSolidNavigation className="widget-nav" />
+                            </Link>
+                        }
                     </div>
                     <div className="poll-body">
                         {
@@ -64,13 +85,13 @@ const PollWidget = (props) => {
                             <div className="poll-options">
                                 {/* Poll options are randomized when rendered to prevent bias */}
                                 <div className="left-option">
-                                    <button onClick={() => handleAnswerPoll('optionOne')} className="option-text">
+                                    <button onClick={() => handleAnswerPoll(mixer ? 'optionOne' : 'optionTwo')} className="option-text">
                                         { mixer ? poll.optionOne.text : poll.optionTwo.text }
                                     </button>
                                 </div>
                                 <div>- or -</div>
                                 <div className="right-option">
-                                    <button onClick={() => handleAnswerPoll('optionTwo')} className="option-text">
+                                    <button onClick={() => handleAnswerPoll(mixer ? 'optionTwo' : 'optionOne')} className="option-text">
                                         { mixer ? poll.optionTwo.text : poll.optionOne.text }
                                     </button>
                                 </div>
@@ -122,7 +143,7 @@ const PollWidget = (props) => {
                             <div className="poll-author">
                                 <label>Poll Created By: </label>
                                 <div className="poll-author-wrap">
-                                    <img className="poll-author-avatar" src={users[poll.author]?.avatarURL} />
+                                    <img className="poll-author-avatar" src={users[poll.author]?.avatarURL ? users[poll.author]?.avatarURL : null} />
                                     <div>
                                         { 
                                             users[poll.author]?.name
