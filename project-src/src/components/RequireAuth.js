@@ -36,10 +36,11 @@ const RequireAuth = (props) => {
     if (user) {
         return <Outlet />
     }
+    // else {
     else if (!noAuth){
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
-    else return <Outlet />
+    // else return <Outlet />
     
 }
 

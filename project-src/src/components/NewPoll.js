@@ -44,7 +44,7 @@ const NewPoll = (props) => {
     }
 
     return (
-        <div>
+        <div data-testid="add-poll-form-wrap">
             <form className="add-poll-form" onSubmit={submitNewPoll}>
 
                 <div className="form-top">

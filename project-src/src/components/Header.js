@@ -22,7 +22,9 @@ const Header = (props) => {
     }, [users])
 
     useEffect(() => {
-        dispatch(setLoadingStart());
+    }, [user])
+
+    useEffect(() => {
         //  When the header loads, fetch the users and set the state
         //  Do this in <Header> because various pages+components may need users and header will render-
         //  -on every route that requires auth
@@ -40,13 +42,14 @@ const Header = (props) => {
             }
         }
         fetchPolls();
-        dispatch(setLoadingEnd());
     }, []);
 
 
     const logout = async() => {
+        dispatch(setLoadingStart());
         await dispatch(attemptLogout());
         navigate('/login');
+        dispatch(setLoadingEnd());
     }
 
     const toggleProfileDropdown = () => {
@@ -68,7 +71,6 @@ const Header = (props) => {
 
     return (
         <div className="header">
-            <span data-testid="test-123">{user?.name}</span>
             <ul className="header-list-left">
                 <li>
                     <Link

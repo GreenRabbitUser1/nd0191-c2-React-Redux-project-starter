@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run vite\" \"npm run server\"",
-    "start": "node server/index.js",
+    "start": "concurrently \"npm run vite\" \"npm run server\"",
     "vite": "vite",
     "server": "node server/index.js",
-    "test": "jest",
+    "test": "jest --verbose",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

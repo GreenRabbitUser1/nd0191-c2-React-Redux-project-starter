@@ -45,7 +45,7 @@ const Leaderboard = (props) => {
 
     return (
         !loading &&
-        <div className="leaderboard-table-wrap">
+        <div className="leaderboard-table-wrap" data-testid="leaderboard-table-wrap">
             <table className="leaderboard-table">
                 <thead>
                     <tr>

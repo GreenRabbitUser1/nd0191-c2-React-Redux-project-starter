@@ -1,19 +1,10 @@
 import React from "react";
-import {render, screen, fireEvent, act, waitFor} from "@testing-library/react";
+import {render, screen, fireEvent, act } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "../App.js";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import rootReducer from '../reducers/index.js';
-import { thunk } from 'redux-thunk'
-import { applyMiddleware } from "redux";
-import { setUser } from "../actions/login.js";
 import store from "../store.js";
 import Header from "../components/Header.js";
-
-
-// const store = createStore(rootReducer, applyMiddleware(thunk));
-
 
 describe("App Load", () => {
     it("should render App", async () => {
@@ -82,6 +73,6 @@ describe("Header", () => {
 
         // Assert the input values
         expect(component).toBeDefined();
-        // expect(component).toMatchSnapshot();
+        expect(component).toMatchSnapshot();
     });
 });
