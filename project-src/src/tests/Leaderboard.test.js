@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import store from "../store.js";
 import LeaderboardPage from "../pages/LeaderboardPage.js";
 
-describe("Leaderboard Load", () => {
+describe("Leaderboard", () => {
     it("should render Leaderboard", async () => {
         // Render the component
 

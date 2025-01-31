@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import store from "../store.js";
 import AddPollPage from "../pages/AddPollPage.js";
 
-describe("AddPoll Load", () => {
+describe("AddPoll", () => {
     it("should render AddPollPage", async () => {
         // Render the component
 

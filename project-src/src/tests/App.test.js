@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import store from "../store.js";
 import Header from "../components/Header.js";
 
-describe("App Load", () => {
+describe("App", () => {
     it("should render App", async () => {
         // Render the component
 
@@ -24,7 +24,7 @@ describe("App Load", () => {
     });
 });
 
-describe("Login Page", () => {
+describe("Login", () => {
     it("should find login fields and add values to them", async () => {
         // Render the component
         

@@ -8,7 +8,7 @@ import { getUsers, saveUser } from "../actions/users";
 import { getPolls } from "../actions/polls";
 import Dashboard from "../components/Dashboard";
 
-describe("Dashboard Component", () => {
+describe("Dashboard", () => {
     beforeAll(() => {
         Object.defineProperty(window, "matchMedia", {
             writable: true,
@@ -18,11 +18,11 @@ describe("Dashboard Component", () => {
                     matches: false,
                     media: query,
                     onchange: null,
-                    addListener: jest.fn(),
-                    removeListener: jest.fn(),
                     addEventListener: jest.fn(),
                     removeEventListener: jest.fn(),
-                    dispatchEvent: jest.fn()
+                    dispatchEvent: jest.fn(),
+                    addListener: jest.fn(),
+                    removeListener: jest.fn(),
                 }))
         });
         delete window.matchMedia;
@@ -32,17 +32,18 @@ describe("Dashboard Component", () => {
             onchange: null,
             addListener: jest.fn(),
             removeListener: jest.fn(),
+            dispatchEvent: jest.fn(),
             addEventListener: jest.fn(),
             removeEventListener: jest.fn(),
-            dispatchEvent: jest.fn()
         });
     });
     afterEach(cleanup);
+
     it("should return a snapshot", async() => {
         const [users, questions] = await Promise.all([_getUsers(), _getQuestions()]);
         store.dispatch(getUsers(users));
         store.dispatch(getPolls(questions));
-        store.dispatch(saveUser(store.getState().users["sarahedo"]));
+        store.dispatch(saveUser(store.getState().users["tylermcginnis"]));
 
         const component = render(
             <Provider store={store}>
